@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  # PHP-FPM Service
+  php:
+    build: ./php
+    container_name: lamp_php
+    volumes:
+      # Keeps the whole application mapped so PHP can access config, vendor, and src folders
+      - ./www:/var/www/html
+    networks:
+      - lamp_network
+    # Run Composer and automate moving your front-end assets on startup
+    command: >
+      sh -c "composer install --no-interaction &&
+             mkdir -p /var/www/html/public/js &&
+             cp /var/www/html/vendor/bower-asset/htmx.org/dist/htmx.min.js /var/www/html/public/js/htmx.js &&
+             cp /var/www/html/vendor/npm-asset/hyperscript.org/dist/_hyperscript.min.js /var/www/html/public/js/hyperscript.js &&
+             exec php-fpm"
+
   # Apache Web Server
   apache:
     build: ./apache
@@ -8,21 +25,12 @@ services:
     ports:
       - "8080:80"
     volumes:
+      # Map the full folder here too, so Apache can resolve static asset paths in public/
       - ./www:/var/www/html
+    networks:
+      - lamp_network
     depends_on:
       - php
-      - mysql
-    networks:
-      - lamp_network
-
-  # PHP-FPM Service
-  php:
-    build: ./php
-    container_name: lamp_php
-    volumes:
-      - ./www:/var/www/html
-    networks:
-      - lamp_network
 
   # MySQL Database
   mysql:

@@ -22,5 +22,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Change ownership of our applications
+# 1. Copy application source code first
+COPY . /var/www/html
+
+# 2. Run composer install (optional: add flags for production optimization if needed)
+# RUN composer install --no-interaction --optimize-autoloader
+
+# 3. Change ownership of our applications AFTER copying files
 RUN chown -R www-data:www-data /var/www/html
+
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]

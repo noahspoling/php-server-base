@@ -1,0 +1,12 @@
+{
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "require": {
+        "bower-asset/htmx.org": "^2.0",
+        "npm-asset/hyperscript.org": "^0.9"
+    }
+}

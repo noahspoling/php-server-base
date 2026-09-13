@@ -1,4 +1,25 @@
-<?php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAMP Stack with Docker Compose</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.5"></script>
+</head>
+<body>
+    <h1>LAMP Stack with Docker Compose</h1>
+    <nav>
+        <ul>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="contact.php">Contact</a></li>
+        </ul>
+    </nav>
+ <?php
+ /*
 $servername = "mysql";
 $username = "lamp_user";
 $password = "lamp_password123";
@@ -64,4 +85,7 @@ echo "<ul>";
 echo "<li><a href='http://localhost:8080' target='_blank'>Web Application (Port 8080)</a></li>";
 echo "<li><a href='http://localhost:8081' target='_blank'>phpMyAdmin (Port 8081)</a></li>";
 echo "</ul>";
+*/
 ?>
+</body>
+</html>
