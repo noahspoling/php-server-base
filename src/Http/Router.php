@@ -15,6 +15,24 @@ final class Router
 
     public function match(string $method, string $path): ?Route
     {
+        // HTTP requires HEAD wherever GET is offered. An explicit HEAD route
+        // still wins, because routes are scanned in declaration order and a
+        // HEAD entry matches on the first pass.
+        $acceptable = $method === 'HEAD' ? ['HEAD', 'GET'] : [$method];
+
+        foreach ($acceptable as $candidate) {
+            $route = $this->matchMethod($candidate, $path);
+
+            if ($route !== null) {
+                return $route;
+            }
+        }
+
+        return null;
+    }
+
+    private function matchMethod(string $method, string $path): ?Route
+    {
         foreach ($this->routes as $key => [$controller, $action]) {
             [$routeMethod, $routePath] = preg_split('/\s+/', trim($key), 2);
 

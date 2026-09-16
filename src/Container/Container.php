@@ -24,6 +24,14 @@ final class Container
 
     public function get(string $id): mixed
     {
+        // The container resolves to itself, so a service that needs to look
+        // things up by name (RouteDispatcher resolving controllers) can just
+        // type-hint it. Without this, autowiring tries to build a second
+        // Container and fails on its array constructor.
+        if ($id === self::class) {
+            return $this;
+        }
+
         if (array_key_exists($id, $this->instances)) {
             return $this->instances[$id];
         }

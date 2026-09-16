@@ -102,6 +102,22 @@ final class ContainerTest extends TestCase
         self::assertTrue((new Container([]))->has(Clock::class));
     }
 
+    public function test_it_resolves_itself_so_a_service_can_depend_on_the_container(): void
+    {
+        $container = new Container([]);
+
+        self::assertSame($container, $container->get(Container::class));
+    }
+
+    public function test_a_service_that_type_hints_the_container_is_autowired_with_this_container(): void
+    {
+        $container = new Container([Greeter::class => static fn (): Greeter => new Greeter('hi')]);
+
+        $locator = $container->get(Locator::class);
+
+        self::assertSame('hi', $locator->lookUp()->greeting);
+    }
+
     public function test_a_circular_dependency_is_reported_instead_of_recursing_forever(): void
     {
         $container = new Container([]);
@@ -146,6 +162,18 @@ final class NeedsScalar
 {
     public function __construct(public readonly string $dsn)
     {
+    }
+}
+
+final class Locator
+{
+    public function __construct(private readonly Container $container)
+    {
+    }
+
+    public function lookUp(): Greeter
+    {
+        return $this->container->get(Greeter::class);
     }
 }
 

@@ -19,6 +19,32 @@ final class RouterTest extends TestCase
         self::assertSame([], $route->params);
     }
 
+    public function test_a_head_request_matches_a_get_route(): void
+    {
+        $route = $this->router(['GET /users' => ['UserController', 'index']])->match('HEAD', '/users');
+
+        self::assertNotNull($route, 'HEAD must be served wherever GET is.');
+        self::assertSame('index', $route->action);
+    }
+
+    public function test_a_head_request_does_not_match_a_post_route(): void
+    {
+        $router = $this->router(['POST /users' => ['UserController', 'store']]);
+
+        self::assertNull($router->match('HEAD', '/users'));
+    }
+
+    public function test_an_explicit_head_route_still_wins(): void
+    {
+        $route = $this->router([
+            'HEAD /users' => ['UserController', 'head'],
+            'GET /users' => ['UserController', 'index'],
+        ])->match('HEAD', '/users');
+
+        self::assertNotNull($route);
+        self::assertSame('head', $route->action);
+    }
+
     public function test_it_returns_null_when_no_path_matches(): void
     {
         $router = $this->router(['GET /users' => ['UserController', 'index']]);
