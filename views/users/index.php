@@ -38,6 +38,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Created</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <?php require __DIR__ . '/rows.php'; ?>

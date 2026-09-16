@@ -19,6 +19,7 @@
         <td><?= e($user['name']) ?></td>
         <td><?= e($user['email']) ?></td>
         <td><?= e($user['created_at']) ?></td>
+        <td><button><i class="fa fa-trash"></i></button></td>
     </tr>
 <?php endforeach; ?>
 </tbody>
