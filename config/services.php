@@ -46,11 +46,12 @@ return [
         // not need it.
         allowEval: filter_var($env('CSP_ALLOW_EVAL', 'true'), FILTER_VALIDATE_BOOL),
 
-        // Google Fonts serves the icon stylesheet from one host and the font
-        // files it references from another, so both are needed for Material
-        // Icons to render. Drop these once the icons are vendored.
-        styleSrc: ['https://fonts.googleapis.com'],
-        fontSrc: ['https://fonts.gstatic.com'],
+        // Font Awesome is served from www/static; cdnjs is allowed only so the
+        // fallback in fa-fallback.js can run when the vendored copy fails to
+        // load. Both directives are needed, because the CDN stylesheet then
+        // requests its own font files from the same origin.
+        styleSrc: ['https://cdnjs.cloudflare.com'],
+        fontSrc: ['https://cdnjs.cloudflare.com'],
     ),
 
     PDO::class => static fn (Container $c): PDO => new PDO(
