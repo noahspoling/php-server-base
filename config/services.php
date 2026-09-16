@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Container\Container;
 use App\Http\Middleware\ErrorHandler;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Router;
 use App\View\Assets;
 use App\View\Renderer;
@@ -36,6 +37,20 @@ return [
 
     ErrorHandler::class => static fn (Container $c): ErrorHandler => new ErrorHandler(
         filter_var($env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOL),
+    ),
+
+    SecurityHeaders::class => static fn (Container $c): SecurityHeaders => new SecurityHeaders(
+        // htmx compiles hx-on: handlers with new Function, which CSP blocks
+        // without 'unsafe-eval'. Turning this on re-enables eval for the whole
+        // origin — behaviour that can live in hyperscript's _ attributes does
+        // not need it.
+        allowEval: filter_var($env('CSP_ALLOW_EVAL', 'true'), FILTER_VALIDATE_BOOL),
+
+        // Google Fonts serves the icon stylesheet from one host and the font
+        // files it references from another, so both are needed for Material
+        // Icons to render. Drop these once the icons are vendored.
+        styleSrc: ['https://fonts.googleapis.com'],
+        fontSrc: ['https://fonts.gstatic.com'],
     ),
 
     PDO::class => static fn (Container $c): PDO => new PDO(

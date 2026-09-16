@@ -23,6 +23,7 @@ services:
       - ./:/var/www/app
     environment:
       APP_DEBUG: ${APP_DEBUG:-false}
+      CSP_ALLOW_EVAL: ${CSP_ALLOW_EVAL:-true}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: ${MYSQL_DATABASE}
