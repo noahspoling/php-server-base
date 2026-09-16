@@ -1,13 +1,14 @@
 FROM httpd:2.4
 
-# Enable mod_rewrite and mod_proxy
-RUN sed -i 's/#LoadModule rewrite_module/LoadModule rewrite_module/' /usr/local/apache2/conf/httpd.conf
-RUN sed -i 's/#LoadModule proxy_module/LoadModule proxy_module/' /usr/local/apache2/conf/httpd.conf
-RUN sed -i 's/#LoadModule proxy_fcgi_module/LoadModule proxy_fcgi_module/' /usr/local/apache2/conf/httpd.conf
+# Modules app.conf depends on: rewrite for asset and front-controller URLs,
+# headers for cache control, proxy_fcgi to reach php-fpm.
+RUN sed -i \
+    -e 's/^#\(LoadModule rewrite_module\)/\1/' \
+    -e 's/^#\(LoadModule headers_module\)/\1/' \
+    -e 's/^#\(LoadModule proxy_module\)/\1/' \
+    -e 's/^#\(LoadModule proxy_fcgi_module\)/\1/' \
+    /usr/local/apache2/conf/httpd.conf
 
-# Configure Apache to work with PHP-FPM
-RUN echo "DirectoryIndex index.php index.html" >> /usr/local/apache2/conf/httpd.conf
-RUN echo "ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php:9000/var/www/html/\$1" >> /usr/local/apache2/conf/httpd.conf
+COPY app.conf /usr/local/apache2/conf/app.conf
 
-# Enable .htaccess files
-RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /usr/local/apache2/conf/httpd.conf
+RUN echo "Include conf/app.conf" >> /usr/local/apache2/conf/httpd.conf

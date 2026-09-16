@@ -18,6 +18,19 @@ INSERT INTO posts (title, content, author) VALUES
 ('Docker Compose Benefits', 'Using Docker Compose makes development environment setup incredibly easy.', 'Developer'),
 ('Database Connection Test', 'If you can see this, your MySQL connection is working perfectly!', 'System');
 
+-- Users, read and written by App\Repository\UserRepository
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO users (name, email) VALUES
+('Ada Lovelace', 'ada@example.com'),
+('Grace Hopper', 'grace@example.com'),
+('Alan Turing', 'alan@example.com');
+
 -- Create additional sample tables
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,

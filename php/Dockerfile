@@ -19,8 +19,10 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
+# The project root, not the webroot. Apache mounts the project at this same
+# path, because SetHandler proxy:fcgi sends Apache's local SCRIPT_FILENAME here
+# and the two containers must agree on what that path means.
+WORKDIR /var/www/app
 
 # Change ownership of our applications
-RUN chown -R www-data:www-data /var/www/html
+RUN mkdir -p /var/www/app && chown -R www-data:www-data /var/www/app
